@@ -17,39 +17,35 @@ function App() {
           <Navbar />
           <main className="flex-grow">
             <Routes>
-              {/* Public Routes */}
               <Route path="/" element={<Home />} />
               <Route path="/post/:id" element={<SinglePost />} />
               <Route path="/admin-login" element={<AdminLogin />} />
-
-              {/* Protected Admin Routes */}
-              <Route 
-                path="/admin/dashboard" 
+              <Route
+                path="/admin/dashboard"
                 element={
                   <ProtectedRoute>
                     <Dashboard />
                   </ProtectedRoute>
-                } 
+                }
               />
-              <Route 
-                path="/admin/create" 
+              <Route
+                path="/admin/create"
                 element={
                   <ProtectedRoute>
                     <CreateEditPost />
                   </ProtectedRoute>
-                } 
+                }
               />
-              <Route 
-                path="/admin/edit/:id" 
+              <Route
+                path="/admin/edit/:id"
                 element={
                   <ProtectedRoute>
                     <CreateEditPost />
                   </ProtectedRoute>
-                } 
+                }
               />
             </Routes>
           </main>
-          
           <footer className="bg-gray-900 text-gray-400 py-6 text-center">
             <p>&copy; {new Date().getFullYear()} MyBlog. Built with MERN Stack.</p>
           </footer>

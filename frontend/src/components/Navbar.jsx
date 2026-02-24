@@ -19,8 +19,6 @@ const Navbar = () => {
           <Link to="/" className="text-2xl font-bold tracking-wide">
             MyBlog
           </Link>
-          
-          {/* Desktop Menu */}
           <div className="hidden md:flex space-x-6 items-center">
             <Link to="/" className="hover:text-blue-400 transition">Home</Link>
             {user?.role === "admin" ? (
@@ -34,8 +32,6 @@ const Navbar = () => {
               <Link to="/admin-login" className="text-gray-400 hover:text-white text-sm">Admin Area</Link>
             )}
           </div>
-
-          {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center">
             <button onClick={() => setIsOpen(!isOpen)} className="text-gray-300 hover:text-white focus:outline-none">
               <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -49,8 +45,6 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-
-      {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden bg-gray-800 px-2 pt-2 pb-3 space-y-1 sm:px-3">
           <Link to="/" onClick={() => setIsOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700">Home</Link>
@@ -60,7 +54,7 @@ const Navbar = () => {
               <button onClick={() => { handleLogout(); setIsOpen(false); }} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-400 hover:bg-gray-700">Logout</button>
             </>
           ) : (
-             <Link to="/admin-login" onClick={() => setIsOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:bg-gray-700">Admin Area</Link>
+            <Link to="/admin-login" onClick={() => setIsOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:bg-gray-700">Admin Area</Link>
           )}
         </div>
       )}

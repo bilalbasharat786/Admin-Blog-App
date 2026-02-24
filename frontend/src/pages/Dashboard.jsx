@@ -21,7 +21,7 @@ const Dashboard = () => {
       try {
         const config = { headers: { Authorization: `Bearer ${user.token}` } };
         await axios.delete(`${import.meta.env.VITE_API_URL}/api/posts/${id}`, config);
-        fetchPosts(); // list ko refresh karne ke liye
+        fetchPosts();
       } catch (error) {
         alert("Error deleting post");
       }

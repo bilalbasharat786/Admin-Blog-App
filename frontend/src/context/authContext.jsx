@@ -7,7 +7,6 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Jab app load ho toh check karein ke kya pehle se login token majood hai
   useEffect(() => {
     const userInfo = localStorage.getItem("userInfo");
     if (userInfo) {

@@ -1,57 +1,61 @@
-import express from 'express';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
+import express from "express";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import User from "../models/User.js";
 
 const router = express.Router();
 
-// Register Route (Normal users ban sakte hain)
-router.post('/register', async (req, res) => {
-    try {
-        const { name, email, password } = req.body;
-        
-        const userExists = await User.findOne({ email });
-        if (userExists) return res.status(400).json({ message: "User already exists" });
+router.post("/register", async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
 
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
+    const userExists = await User.findOne({ email });
+    if (userExists)
+      return res.status(400).json({ message: "User already exists" });
 
-        const user = await User.create({ name, email, password: hashedPassword });
-        res.status(201).json({ message: "User registered successfully", userId: user._id });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const user = await User.create({ name, email, password: hashedPassword });
+    res
+      .status(201)
+      .json({ message: "User registered successfully", userId: user._id });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
-// Login Route (Sirf Admin login kar payega)
-router.post('/login', async (req, res) => {
-    try {
-        const { email, password } = req.body;
-        
-        const user = await User.findOne({ email });
-        if (!user) return res.status(400).json({ message: "Invalid credentials" });
+router.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-        // Normal user login ko block karein
-        if (user.role !== 'admin') {
-            return res.status(403).json({ message: "Login denied. Only Admin account can log in." });
-        }
+    const user = await User.findOne({ email });
+    if (!user) return res.status(400).json({ message: "Invalid credentials" });
 
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
-
-        // Admin ke liye token generate karein
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
-
-        res.json({
-            _id: user._id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
-            token: token
-        });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+    if (user.role !== "admin") {
+      return res
+        .status(403)
+        .json({ message: "Login denied. Only Admin account can log in." });
     }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch)
+      return res.status(400).json({ message: "Invalid credentials" });
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "30d",
+    });
+
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      token: token,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
 export default router;
