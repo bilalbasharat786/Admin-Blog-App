@@ -22,7 +22,6 @@ export const protectAdmin = async (req, res, next) => {
             message: "Access Denied. Only Admin can perform this action.",
           });
       }
-
       next();
     } catch (error) {
       res.status(401).json({ message: "Not authorized, token failed" });

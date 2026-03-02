@@ -2,15 +2,8 @@
 
 A full-stack blog application built with the MERN stack (MongoDB, Express, React, Node.js). This platform allows public visitors to read posts and leave comments freely, while restricting post creation, editing, and deletion to a secure Admin-only dashboard.
 
-## 🚀 Live Demo
-* **Frontend (Vercel):** [https://post-app-6xcm.vercel.app](https://post-app-6xcm.vercel.app)
-* **Backend API (Vercel):** [https://post-app-smoky.vercel.app](https://post-app-smoky.vercel.app)
 
-*(Note: Replace the links above with your actual Vercel links if they change)*
-
----
-
-## ✨ Features
+##  Features
 
 * **Role-Based Access Control (RBAC):** Only users with the 'admin' role can log in and access the dashboard.
 * **Public Access:** Visitors can browse all blog posts and add comments without needing an account or logging in.
@@ -22,25 +15,12 @@ A full-stack blog application built with the MERN stack (MongoDB, Express, React
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 * **Frontend:** React.js, Vite, Tailwind CSS, Axios, React Router Dom
 * **Backend:** Node.js, Express.js, JWT, bcryptjs, Mongoose
 * **Database:** MongoDB Atlas
 * **Deployment:** Vercel (Both Frontend & Backend)
 
----
 
-## 📸 Screenshots
-
-
-1. **Home Page (Public View):** ![alt text](image-1.png)
-
-2. **Single Post & Comments:** ![alt text](image-2.png)
-
-3. **Admin Login Page:** ![alt text](image-5.png)
-
-4. **Admin Dashboard:** ![alt text](image-4.png)
-
----
 

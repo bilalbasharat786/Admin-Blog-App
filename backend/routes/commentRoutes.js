@@ -34,4 +34,5 @@ router.delete("/:id", protectAdmin, async (req, res) => {
   }
 });
 
+
 export default router;
