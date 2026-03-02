@@ -37,7 +37,7 @@ app.use("/api/posts", postRoutes);
 app.use("/api/comments", commentRoutes);
 
 app.get("/", (req, res) => {
-  res.send("Admin Blog API is running perfectly with ES6!");
+  res.send("Admin Blog API is running");
 });
 
 const PORT = process.env.PORT || 5000;
