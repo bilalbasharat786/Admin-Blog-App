@@ -9,7 +9,7 @@ import commentRoutes from "./routes/commentRoutes.js";
 dotenv.config();
 const app = express();
 
-const allowedOrigins = ["https://post-app-6xcm.vercel.app"];
+const allowedOrigins = ["https://admin-blog-app-1axa.vercel.app"];
 
 app.use(
   cors({
