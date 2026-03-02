@@ -1,18 +1,40 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight, FiCalendar } from "react-icons/fi";
 
 const PostCard = ({ post }) => {
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
-      {post.image && (
-        <img src={post.image} alt={post.title} className="w-full h-48 object-cover" />
-      )}
-      <div className="p-5 flex-grow flex flex-col justify-between">
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col group">
+      <div className="relative h-56 overflow-hidden bg-gray-100">
+        {post.image ? (
+          <img 
+            src={post.image} 
+            alt={post.title} 
+            className="w-full h-full object-cover group-hover:scale-105 transition duration-500" 
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-gray-400 font-medium">
+            No Image Provided
+          </div>
+        )}
+      </div>
+      
+      <div className="p-6 flex-grow flex flex-col justify-between">
         <div>
-          <h2 className="text-xl font-bold text-gray-800 mb-2 line-clamp-2">{post.title}</h2>
-          <p className="text-gray-600 mb-4 line-clamp-3">{post.content}</p>
+          <div className="flex items-center gap-2 text-xs font-semibold text-blue-600 mb-3 uppercase tracking-wider">
+            <FiCalendar /> {new Date(post.createdAt).toLocaleDateString()}
+          </div>
+          <h2 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 leading-snug group-hover:text-blue-600 transition">
+            {post.title}
+          </h2>
+          <p className="text-gray-600 mb-6 line-clamp-3 text-sm leading-relaxed">
+            {post.content}
+          </p>
         </div>
-        <Link to={`/post/${post._id}`} className="text-blue-600 font-semibold hover:text-blue-800 self-start">
-          Read More &rarr;
+        <Link 
+          to={`/post/${post._id}`} 
+          className="inline-flex items-center gap-2 text-blue-600 font-semibold hover:text-blue-800 self-start transition"
+        >
+          Read Article <FiArrowRight className="transform group-hover:translate-x-1 transition" />
         </Link>
       </div>
     </div>

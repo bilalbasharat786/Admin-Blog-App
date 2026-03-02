@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import axios from "axios";
+import { FiCalendar, FiUser, FiMessageSquare, FiArrowLeft } from "react-icons/fi";
+import { toast } from "react-toastify";
 
 const SinglePost = () => {
   const { id } = useParams();
@@ -8,6 +10,7 @@ const SinglePost = () => {
   const [comments, setComments] = useState([]);
   const [visitorName, setVisitorName] = useState("");
   const [content, setContent] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchPostAndComments = async () => {
@@ -17,7 +20,7 @@ const SinglePost = () => {
         const commentData = await axios.get(`${import.meta.env.VITE_API_URL}/api/comments/${id}`);
         setComments(commentData.data);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        toast.error("Error loading article.");
       }
     };
     fetchPostAndComments();
@@ -25,71 +28,108 @@ const SinglePost = () => {
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
-    if (!visitorName || !content) return alert("Please fill all fields");
-
+    if (!visitorName || !content) return toast.warning("Please fill all fields");
+    setLoading(true);
+    
     try {
       const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/comments`, {
         postId: id,
         visitorName,
         content
       });
-      setComments([data, ...comments]);
+      setComments([data, ...comments]); 
       setVisitorName("");
       setContent("");
+      toast.success("Comment posted!");
+      setLoading(false);
     } catch (error) {
-      console.error("Error posting comment", error);
+      toast.error("Error posting comment");
+      setLoading(false);
     }
   };
 
-  if (!post) return <div className="text-center mt-20 text-xl font-bold">Loading...</div>;
+  if (!post) return <div className="text-center mt-32 text-xl font-semibold text-gray-500">Loading Article...</div>;
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-10">
-      {post.image && <img src={post.image} alt={post.title} className="w-full h-auto max-h-[500px] object-cover rounded-lg mb-8" />}
-      <h1 className="text-4xl font-bold text-gray-900 mb-4">{post.title}</h1>
-      <p className="text-sm text-gray-500 mb-8">Published on {new Date(post.createdAt).toLocaleDateString()}</p>
+    <div className="bg-white min-h-screen pb-20">
+      {/* Article Header Image */}
+      {post.image && (
+        <div className="w-full h-[40vh] md:h-[60vh] bg-gray-100">
+          <img src={post.image} alt={post.title} className="w-full h-full object-cover" />
+        </div>
+      )}
 
-      <div className="prose max-w-none text-gray-800 text-lg whitespace-pre-wrap mb-12">
-        {post.content}
-      </div>
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 md:-mt-20 relative z-10">
+        <div className="bg-white p-8 md:p-12 rounded-2xl shadow-xl border border-gray-100 mb-12">
+          <Link to="/" className="inline-flex items-center gap-2 text-blue-600 font-medium hover:underline mb-6">
+            <FiArrowLeft /> Back to Articles
+          </Link>
+          <h1 className="text-3xl md:text-5xl font-extrabold text-gray-900 mb-6 leading-tight">{post.title}</h1>
+          
+          <div className="flex items-center gap-6 text-sm text-gray-500 font-medium uppercase tracking-wider mb-10 pb-10 border-b border-gray-100">
+            <div className="flex items-center gap-2"><FiCalendar className="text-blue-600 text-lg" /> {new Date(post.createdAt).toLocaleDateString()}</div>
+            <div className="flex items-center gap-2"><FiMessageSquare className="text-blue-600 text-lg" /> {comments.length} Comments</div>
+          </div>
+          
+          <div className="prose prose-lg md:prose-xl max-w-none text-gray-700 leading-relaxed whitespace-pre-wrap">
+            {post.content}
+          </div>
+        </div>
 
-      <hr className="my-10 border-gray-300" />
-
-      <div>
-        <h3 className="text-2xl font-bold mb-6">Comments ({comments.length})</h3>
-
-        <form onSubmit={handleCommentSubmit} className="bg-gray-50 p-6 rounded-lg shadow-sm mb-8">
-          <h4 className="text-lg font-semibold mb-4">Leave a Reply</h4>
-          <input
-            type="text"
-            placeholder="Your Name"
-            value={visitorName}
-            onChange={(e) => setVisitorName(e.target.value)}
-            className="w-full p-3 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-          <textarea
-            placeholder="Your Comment..."
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            className="w-full p-3 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 h-32"
-            required
-          ></textarea>
-          <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition font-semibold">
-            Post Comment
-          </button>
-        </form>
-
-        <div className="space-y-6">
-          {comments.map((comment) => (
-            <div key={comment._id} className="bg-white p-5 rounded-lg border border-gray-200">
-              <div className="flex justify-between items-center mb-2">
-                <h5 className="font-bold text-gray-800">{comment.visitorName}</h5>
-                <span className="text-xs text-gray-500">{new Date(comment.createdAt).toLocaleDateString()}</span>
+        {/* Comments Section */}
+        <div className="bg-gray-50 p-8 md:p-10 rounded-2xl border border-gray-100">
+          <h3 className="text-2xl font-bold text-gray-900 mb-8 flex items-center gap-3">
+            <FiMessageSquare /> Discussion ({comments.length})
+          </h3>
+          
+          {/* Comment Form */}
+          <form onSubmit={handleCommentSubmit} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-12">
+            <h4 className="text-lg font-semibold text-gray-800 mb-4">Join the conversation</h4>
+            <div className="mb-4 relative">
+              <div className="absolute inset-y-0 left-0 pl-3 pt-3 pointer-events-none text-gray-400">
+                <FiUser />
               </div>
-              <p className="text-gray-700">{comment.content}</p>
+              <input 
+                type="text" 
+                placeholder="Your Full Name" 
+                value={visitorName} 
+                onChange={(e) => setVisitorName(e.target.value)}
+                className="w-full pl-10 p-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                required
+              />
             </div>
-          ))}
+            <textarea 
+              placeholder="What are your thoughts?" 
+              value={content} 
+              onChange={(e) => setContent(e.target.value)}
+              className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 h-32 resize-y transition mb-4"
+              required
+            ></textarea>
+            <button type="submit" disabled={loading} className="px-6 py-3 bg-gray-900 text-white font-bold rounded-lg hover:bg-gray-800 transition shadow-md disabled:opacity-70">
+              {loading ? "Posting..." : "Post Comment"}
+            </button>
+          </form>
+
+          {/* Comments List */}
+          <div className="space-y-6">
+            {comments.map((comment) => (
+              <div key={comment._id} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex gap-4">
+                <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-xl shrink-0">
+                  {comment.visitorName.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <div className="flex items-center gap-3 mb-1">
+                    <h5 className="font-bold text-gray-900 text-lg">{comment.visitorName}</h5>
+                    <span className="text-xs text-gray-400 font-medium">{new Date(comment.createdAt).toLocaleDateString()}</span>
+                  </div>
+                  <p className="text-gray-600 leading-relaxed">{comment.content}</p>
+                </div>
+              </div>
+            ))}
+            {comments.length === 0 && (
+              <div className="text-center py-8 text-gray-500 font-medium">Be the first to share your thoughts!</div>
+            )}
+          </div>
         </div>
       </div>
     </div>

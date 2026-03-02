@@ -1,5 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/authContext";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -13,42 +16,45 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="min-h-screen bg-gray-100 flex flex-col">
+        <div className="min-h-screen flex flex-col font-sans text-gray-800">
+          {/* ToastContainer pyary notifications k liya */}
+          <ToastContainer position="top-right" autoClose={3000} />
+          
           <Navbar />
           <main className="flex-grow">
             <Routes>
+              {/* Public Routes */}
               <Route path="/" element={<Home />} />
               <Route path="/post/:id" element={<SinglePost />} />
               <Route path="/admin-login" element={<AdminLogin />} />
-              <Route
-                path="/admin/dashboard"
+
+              {/* Protected Admin Routes */}
+              <Route 
+                path="/admin/dashboard" 
                 element={
                   <ProtectedRoute>
                     <Dashboard />
                   </ProtectedRoute>
-                }
+                } 
               />
-              <Route
-                path="/admin/create"
+              <Route 
+                path="/admin/create" 
                 element={
                   <ProtectedRoute>
                     <CreateEditPost />
                   </ProtectedRoute>
-                }
+                } 
               />
-              <Route
-                path="/admin/edit/:id"
+              <Route 
+                path="/admin/edit/:id" 
                 element={
                   <ProtectedRoute>
                     <CreateEditPost />
                   </ProtectedRoute>
-                }
+                } 
               />
             </Routes>
           </main>
-          <footer className="bg-gray-900 text-gray-400 py-6 text-center">
-            <p>&copy; {new Date().getFullYear()} MyBlog. Built with MERN Stack.</p>
-          </footer>
         </div>
       </Router>
     </AuthProvider>
